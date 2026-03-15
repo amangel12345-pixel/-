@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yunanistan — Olimpiyat Şampiyonları</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold2: #f0d080;
+    --dark: #07070d;
+    --card: #0f0f1a;
+    --border: rgba(201,168,76,0.18);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--dark);
+    color: #e8e0d0;
+    font-family: 'Lato', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── STARS ─── */
+  #stars { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+    background: radial-gradient(ellipse at 30% 60%, rgba(40,80,130,.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(201,168,76,.06) 0%, transparent 50%), #07070d; }
+  .star { position:absolute; border-radius:50%; background:#fff; animation:twinkle var(--d) var(--dl) infinite alternate; }
+  @keyframes twinkle { from{opacity:.08} to{opacity:.7} }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative; z-index:1;
+    min-height: 100vh;
+    display: flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align: center; padding: 2rem;
+    background: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,0.8) 100%);
+  }
+  .hero-crown { font-size: 5rem; animation: pulse 3s ease-in-out infinite; margin-bottom:1rem; }
+  @keyframes pulse { 0%,100%{filter:drop-shadow(0 0 15px rgba(201,168,76,.5))} 50%{filter:drop-shadow(0 0 40px rgba(201,168,76,.9))} }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.2rem, 7vw, 5.5rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #8B6914 0%, #C9A84C 30%, #fff8d0 55%, #C9A84C 80%, #8B6914 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1.1; margin-bottom: .8rem;
+    animation: fadeDown 1s ease .3s both;
+  }
+  .hero-sub {
+    font-family: 'Cinzel', serif; font-size: clamp(.75rem, 2vw, 1rem);
+    color: rgba(201,168,76,.7); letter-spacing: .3em; text-transform:uppercase;
+    animation: fadeDown 1s ease .6s both;
+  }
+  .hero-line {
+    width: 220px; height: 2px; margin: 1.5rem auto;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    animation: fadeDown 1s ease .8s both;
+  }
+  .hero-desc {
+    max-width: 600px; color: rgba(232,224,208,.65); font-size:.95rem; line-height:1.7;
+    animation: fadeDown 1s ease 1s both;
+  }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:translateY(0)} }
+
+  /* scroll hint */
+  .scroll-hint {
+    position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+    font-family:'Cinzel',serif; font-size:.65rem; letter-spacing:.2em; color:rgba(201,168,76,.45);
+    text-transform:uppercase; animation: bounce 2s ease-in-out infinite;
+    display:flex; flex-direction:column; align-items:center; gap:.4rem;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(7px)} }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    position:relative; z-index:1;
+    background: rgba(201,168,76,.06); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex; flex-wrap:wrap; justify-content:center; gap:2rem 4rem;
+  }
+  .stat-item { text-align:center; }
+  .stat-num { font-family:'Cinzel Decorative',serif; font-size:2rem; font-weight:900; color:var(--gold); line-height:1; }
+  .stat-lbl { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:rgba(201,168,76,.55); margin-top:.3rem; }
+
+  /* ─── SECTION TITLE ─── */
+  .sec-title {
+    position:relative; z-index:1;
+    text-align:center; padding: 5rem 2rem 2.5rem;
+  }
+  .sec-title h2 {
+    font-family:'Cinzel Decorative',serif; font-size:clamp(1.3rem,3.5vw,2.4rem); font-weight:900;
+    color: var(--gold); margin-bottom:.6rem;
+  }
+  .sec-title p { font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.25em; text-transform:uppercase; color:rgba(201,168,76,.45); }
+  .sec-divider { width:80px; height:2px; background:linear-gradient(to right, transparent,var(--gold),transparent); margin:.8rem auto 0; }
+
+  /* ─── ATHLETE GRID ─── */
+  .athletes-grid {
+    position:relative; z-index:1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 5rem;
+  }
+
+  /* ─── ATHLETE CARD ─── */
+  .athlete-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+    opacity: 0; transform: translateY(36px);
+    transition: opacity .6s ease, transform .6s ease, border-color .3s, box-shadow .3s;
+  }
+  .athlete-card.in {
+    opacity: 1; transform: translateY(0);
+  }
+  .athlete-card:hover {
+    border-color: rgba(201,168,76,.55);
+    box-shadow: 0 24px 60px rgba(201,168,76,.12), 0 8px 20px rgba(0,0,0,.4);
+  }
+
+  /* card photo area */
+  .card-photo {
+    width: 100%; aspect-ratio: 16/9; overflow:hidden; position:relative;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+  }
+  .card-photo img {
+    width:100%; height:100%; object-fit:cover;
+    transition: transform .5s ease;
+    filter: brightness(.9) contrast(1.05);
+  }
+  .athlete-card:hover .card-photo img { transform:scale(1.05); }
+  .card-photo-overlay {
+    position:absolute; inset:0;
+    background: linear-gradient(to top, rgba(7,7,13,.9) 0%, transparent 50%);
+  }
+  .card-year-badge {
+    position:absolute; top:1rem; right:1rem;
+    background: linear-gradient(135deg, rgba(139,105,20,.95), rgba(201,168,76,.95));
+    color: #07070d; font-family:'Cinzel Decorative',serif; font-size:.7rem; font-weight:900;
+    padding: .3rem .75rem; border-radius: 2rem; letter-spacing:.05em;
+  }
+  .card-flag {
+    position:absolute; top:1rem; left:1rem; font-size:1.8rem;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
+  }
+  .card-sport-icon {
+    position:absolute; bottom:1rem; left:1.2rem;
+    font-size:2.2rem; filter:drop-shadow(0 2px 8px rgba(0,0,0,.8));
+  }
+
+  /* card body */
+  .card-body { padding: 1.4rem 1.4rem 0; }
+  .card-name {
+    font-family:'Cinzel Decorative',serif; font-size:1.05rem; font-weight:700;
+    color: var(--gold2); margin-bottom:.25rem; line-height:1.2;
+  }
+  .card-sport-year {
+    font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color: rgba(201,168,76,.55); margin-bottom:.8rem;
+  }
+  .card-desc { font-size:.87rem; line-height:1.65; color:rgba(232,224,208,.72); margin-bottom:1.1rem; }
+
+  /* medals row */
+  .medals-row { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1.1rem; }
+  .medal-chip {
+    display:flex; align-items:center; gap:.3rem;
+    background: rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.25);
+    border-radius:2rem; padding:.25rem .7rem; font-size:.72rem;
+    font-family:'Cinzel',serif; color:var(--gold); letter-spacing:.05em;
+  }
+  .medal-chip .dot { width:8px; height:8px; border-radius:50%; }
+  .dot-gold { background:#FFD700; box-shadow:0 0 6px #FFD700; }
+  .dot-silver { background:#C0C0C0; }
+  .dot-bronze { background:#CD7F32; }
+
+  /* ─── VIDEO EMBED ─── */
+  .card-video {
+    position:relative; width:80%; aspect-ratio:16/9; overflow:hidden;
+    background:#000; cursor:pointer;
+    border-top: 1px solid var(--border);
+  }
+  .video-thumb {
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .4s ease, opacity .3s;
+  }
+  .video-overlay {
+    position:absolute; inset:0;
+    background: rgba(0,0,0,.45);
+    display:flex; align-items:center; justify-content:center;
+    transition: background .3s;
+  }
+  .card-video:hover .video-overlay { background: rgba(0,0,0,.25); }
+  .play-btn {
+    width:64px; height:64px; border-radius:50%;
+    background: rgba(201,168,76,.92);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 0 30px rgba(201,168,76,.6);
+    transition:transform .25s ease, box-shadow .25s;
+  }
+  .card-video:hover .play-btn { transform:scale(1.12); box-shadow:0 0 45px rgba(201,168,76,.9); }
+  .play-btn svg { width:26px; height:26px; margin-left:4px; }
+  .video-label {
+    position:absolute; bottom:.8rem; left:.9rem;
+    background:rgba(0,0,0,.7); border:1px solid rgba(201,168,76,.3);
+    color:var(--gold); font-size:.65rem; font-family:'Cinzel',serif;
+    letter-spacing:.1em; text-transform:uppercase;
+    padding:.25rem .6rem; border-radius:.4rem;
+  }
+
+  /* iframe embed (hidden initially) */
+  .card-iframe { display:none; position:relative; width:100%; aspect-ratio:16/9; }
+  .card-iframe iframe { width:100%; height:100%; border:none; }
+  .card-iframe.active { display:block; }
+  .card-video.hidden { display:none; }
+
+  /* no-video placeholder */
+  .no-video {
+    border-top:1px solid var(--border);
+    padding:1rem 1.4rem;
+    font-size:.78rem; color:rgba(201,168,76,.4);
+    font-family:'Cinzel',serif; letter-spacing:.08em;
+    text-align:center;
+  }
+
+  /* ─── FEATURED (wide) card ─── */
+  .featured {
+    grid-column: 1 / -1;
+    display:grid; grid-template-columns:1fr 1fr;
+  }
+  @media(max-width:700px){ .featured{ grid-template-columns:1fr; } }
+  .featured .card-photo { aspect-ratio:4/3; height:100%; }
+  .featured .card-name { font-size:1.4rem; }
+
+  /* ─── TIMELINE STRIP ─── */
+  .timeline-strip {
+    position:relative; z-index:1;
+    max-width:1100px; margin:0 auto 5rem; padding:0 1.5rem;
+    display:flex; flex-wrap:wrap; gap:0; justify-content:center;
+  }
+  .tl-item {
+    flex:1; min-width:110px; text-align:center; padding:1.2rem .5rem;
+    position:relative; cursor:default;
+    border-top:2px solid rgba(201,168,76,.2);
+    transition: border-color .3s;
+  }
+  .tl-item:hover { border-color:var(--gold); }
+  .tl-item::before {
+    content:''; position:absolute; top:-6px; left:50%;
+    transform:translateX(-50%);
+    width:10px; height:10px; border-radius:50%;
+    background:rgba(201,168,76,.3); border:2px solid var(--gold);
+    transition: background .3s, transform .3s;
+  }
+  .tl-item:hover::before { background:var(--gold); transform:translateX(-50%) scale(1.4); }
+  .tl-year { font-family:'Cinzel Decorative',serif; font-size:1.05rem; color:var(--gold); }
+  .tl-name { font-family:'Cinzel',serif; font-size:.63rem; color:rgba(232,224,208,.55); margin-top:.25rem; letter-spacing:.05em; }
+  .tl-medal { font-size:1.3rem; margin-bottom:.3rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position:relative; z-index:1;
+    text-align:center; padding:3rem 2rem;
+    border-top:1px solid var(--border);
+  }
+  footer p { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(201,168,76,.35); }
+
+  /* ─── responsive ─── */
+  @media(max-width:760px){ .athletes-grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div id="stars"></div>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <div class="hero-crown">🏛️</div>
+  <h1 class="hero-title">Yunanistan<br>Olimpiyat Şampiyonları</h1>
+  <p class="hero-sub">Altın Madalya Şöhret Salonu</p>
+  <div class="hero-line"></div>
+  <p class="hero-desc">
+    MÖ 776'dan günümüze uzanan köklü spor geleneğiyle Yunanistan,
+    olimpiyat tarihine adını altın harflerle yazdıran sporcular yetiştirmiştir.
+    İşte o efsanevi şampiyonlar ve tarihi anlar.
+  </p>
+  <div class="scroll-hint">
+    <span>Aşağı Kay</span>
+    <svg width="14" height="22" viewBox="0 0 14 22" fill="none">
+      <path d="M7 0v18M1 12l6 8 6-8" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ══════════ STATS BAR ══════════ -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">34</div><div class="stat-lbl">Altın Madalya</div></div>
+  <div class="stat-item"><div class="stat-num">129+</div><div class="stat-lbl">Toplam Madalya</div></div>
+  <div class="stat-item"><div class="stat-num">1896</div><div class="stat-lbl">İlk Modern Olimpiyat</div></div>
+  <div class="stat-item"><div class="stat-num">2004</div><div class="stat-lbl">En Başarılı Olimpiyat</div></div>
+  <div class="stat-item"><div class="stat-num">15</div><div class="stat-lbl">Farklı Spor Dalı</div></div>
+</div>
+
+<!-- ══════════ TIMELINE ══════════ -->
+<div class="sec-title">
+  <h2>Altın Kronoloji</h2>
+  <p>Yıllar İtibariyle Öne Çıkan Şampiyonlar</p>
+  <div class="sec-divider"></div>
+</div>
+<div class="timeline-strip">
+  <div class="tl-item"><div class="tl-medal">🏃</div><div class="tl-year">1896</div><div class="tl-name">Spyridon Louis<br>Maraton</div></div>
+  <div class="tl-item"><div class="tl-medal">⛵</div><div class="tl-year">1960</div><div class="tl-name">Kral Konstantinos<br>Yelken</div></div>
+  <div class="tl-item"><div class="tl-medal">🏋️</div><div class="tl-year">1992</div><div class="tl-name">Pyrros Dimas<br>Halter</div></div>
+  <div class="tl-item"><div class="tl-medal">🏋️</div><div class="tl-year">1996</div><div class="tl-name">Pyrros Dimas<br>Halter (2.)</div></div>
+  <div class="tl-item"><div class="tl-medal">🤸</div><div class="tl-year">1996</div><div class="tl-name">I. Melissanidis<br>Jimnastik</div></div>
+  <div class="tl-item"><div class="tl-medal">🏃</div><div class="tl-year">2000</div><div class="tl-name">K. Kenteris<br>200m</div></div>
+  <div class="tl-item"><div class="tl-medal">🏋️</div><div class="tl-year">2000</div><div class="tl-name">Pyrros Dimas<br>Halter (3.)</div></div>
+  <div class="tl-item"><div class="tl-medal">🏊</div><div class="tl-year">2004</div><div class="tl-name">Bimis/Siranidis<br>Atlama</div></div>
+  <div class="tl-item"><div class="tl-medal">🚶</div><div class="tl-year">2004</div><div class="tl-name">A. Tsoumeleka<br>Yürüyüş</div></div>
+  <div class="tl-item"><div class="tl-medal">🏃‍♀️</div><div class="tl-year">2004</div><div class="tl-name">Fani Halkia<br>400m Engel</div></div>
+  <div class="tl-item"><div class="tl-medal">🥋</div><div class="tl-year">2004</div><div class="tl-name">Ilias Iliadis<br>Judo</div></div>
+  <div class="tl-item"><div class="tl-medal">🤸</div><div class="tl-year">2016</div><div class="tl-name">L. Petrounias<br>Halka</div></div>
+  <div class="tl-item"><div class="tl-medal">🎯</div><div class="tl-year">2016</div><div class="tl-name">A. Korakakis<br>Atıcılık</div></div>
+  <div class="tl-item"><div class="tl-medal">🏃‍♀️</div><div class="tl-year">2016</div><div class="tl-name">K. Stefanidi<br>Sırıkla Atlama</div></div>
+  <div class="tl-item"><div class="tl-medal">🚣</div><div class="tl-year">2021</div><div class="tl-name">S. Douskos<br>Kürek</div></div>
+</div>
+
+<!-- ══════════ ATHLETE CARDS ══════════ -->
+<div class="sec-title">
+  <h2>Şöhret Salonu</h2>
+  <p>Fotoğraflar &amp; Videolarla Şampiyonlar</p>
+  <div class="sec-divider"></div>
+</div>
+
+<div class="athletes-grid">
+
+  <!-- ① PYRROS DIMAS — FEATURED -->
+  <div class="athlete-card featured" id="card-dimas">
+    <div class="card-photo">
+      <img src="dimasbayrak.jpg"
+           alt="Pyrros Dimas">
+      <div class="card-photo-overlay"></div>
+      <span class="card-flag">🇬🇷</span>
+      <span class="card-year-badge">1992 · 1996 · 2000</span>
+      <span class="card-sport-icon">🏋️</span>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div class="card-body">
+        <div class="card-name">Pyrros Dimas</div>
+        <div class="card-sport-year">Halter • Barcelona 1992 | Atlanta 1996 | Sydney 2000</div>
+        <div class="medals-row">
+          <span class="medal-chip"><span class="dot dot-gold"></span>Altın — Barcelona 1992</span>
+          <span class="medal-chip"><span class="dot dot-gold"></span>Altın — Atlanta 1996</span>
+          <span class="medal-chip"><span class="dot dot-gold"></span>Altın — Sydney 2000</span>
+          <span class="medal-chip"><span class="dot dot-bronze"></span>Bronz — Atina 2004</span>
+        </div>
+        <p class="card-desc">
+          Yunanistan'ın tüm zamanların en büyük olimpik sporcusu. Üç altın, bir bronz madalyayla halter tarihine adını yazdırdı. 1996 Atlanta'da hem snatch hem jerk dünya rekoru kırdı. 2004 Atina'da sakatlanmış hâlde bronz alarak platformdan ayakkabılarını çıkarıp bıraktı — emekliliğinin sembolü oldu.
+        </p>
+      </div>
+      <!-- VIDEO -->
+      <div class="card-video-local">
+        <video controls preload="metadata" style="width:100%;display:block;background:#000">
+          <source src="dimas.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② Kakhi Kakhiashvili -->
+  <div class="athlete-card">
+    <div class="card-photo">
+      <img src="kakhi-kakhiashvili.jpg" alt="Spyridon Louis">
+      <div class="card-photo-overlay"></div>
+      <span class="card-flag">🇬🇷</span>
+      <span class="card-year-badge">1992·1996·2000</span>
+      <span class="card-sport-icon">🏋️</span>
+    </div>
+    <div class="card-body">
+      <div class="card-name">Kakhi Kakhiashvili</div>
+      <div class="card-sport-year">Halter • Barcelona 1992 | Atlanta 1996 | Sydney 2000</div>
+      <div class="medals-row">
+        <span class="medal-chip"><span class="dot dot-gold"></span>Altın - 1992 Barcelona</span>
+        <span class="medal-chip"><span class="dot dot-gold"></span>Altın — 1996 Atlanta</span>
+        <span class="medal-chip"><span class="dot dot-gold"></span>Altın — 2000 Sydney</span>
+      </div>
+      <p class="card-desc">
+        Yunanistan adına yarışan en büyük olimpik haltercilerden biri. Üç Olimpiyat altını kazanarak halter tarihine girdi.Gürcistan doğumlu olmasına rağmen kariyerinin en büyük başarılarını Yunanistan adına kazandı ve uzun yıllar Yunan sporunun efsanelerinden biri sayıldı.
+    </div>
+    <div class="card-video-local">
+        <video controls preload="metadata" style="width:100%;display:block;background:#000">
+          <source src="kak.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  
+  <!-- ⑧ NIKOS KAKLAMANAKIS -->
+  <div class="athlete-card">
+    <div class="card-photo">
+      <img src="yelkenci2.jpg" alt="Nikos Kaklamanakis"
+           onerror="this.parentElement.style.background='linear-gradient(135deg,#0a1a2a,#0a2a3a)'">
+      <div class="card-photo-overlay"></div>
+      <span class="card-flag">🇬🇷</span>
+      <span class="card-year-badge">Atlanta 1996</span>
+      <span class="card-sport-icon">⛵</span>
+    </div>
+    <div class="card-body">
+      <div class="card-name">Nikos Kaklamanakis</div>
+      <div class="card-sport-year">Yelken — Mistral • Atlanta 1996</div>
+      <div class="medals-row">
+        <span class="medal-chip"><span class="dot dot-gold"></span>Altın — Yelken 1996</span>
+        <span class="medal-chip"><span class="dot dot-silver"></span>Gümüş — 2004</span>
+      </div>
+      <p class="card-desc">
+        5 olimpiyata katılan efsanevi Yunan yelkenci. 1996 Atlanta'da Mistral sınıfında altın madalya kazandı. 2004 Atina Olimpiyatları açılış töreninde meşaleyi denizden taşıyıp olimpiyat ateşini tutuşturan kişi olarak olimpiyat tarihine geçti.
+      </p>
+    </div>
+    <div class="card-video-local">
+        <video controls preload="metadata" style="width:100%;display:block;background:#000">
+          <source src="yelken.mp4" type="video/mp4">
+      </video>
+  </div>
+</div>
+
+    
+  <!-- ⑩ ATINA 2004 GENEL -->
+  <div class="athlete-card">
+    <div class="card-photo">
+      <img src="atina.avif" alt="Athens 2004">
+      <div class="card-photo-overlay"></div>
+      <span class="card-flag">🇬🇷</span>
+      <span class="card-year-badge">Atina 2004</span>
+      <span class="card-sport-icon">🔥</span>
+    </div>
+    <div class="card-body">
+      <div class="card-name">Atina 2004 — "Eve Dönüş"</div>
+      <div class="card-sport-year">XXVIII. Yaz Olimpiyatları • 13–29 Ağustos 2004</div>
+      <div class="medals-row">
+        <span class="medal-chip"><span class="dot dot-gold"></span>6 Altın Madalya</span>
+        <span class="medal-chip"><span class="dot dot-silver"></span>6 Gümüş</span>
+        <span class="medal-chip"><span class="dot dot-bronze"></span>4 Bronz</span>
+      </div>
+      <p class="card-desc">
+        108 yıl sonra olimpiyatlar Yunanistan'a döndü. 201 ülke, 10.625 sporcu, 28 spor dalı. Yunanistan tarihinin en başarılı olimpiyatı: 16 madalya. "Welcome Home" temasıyla düzenlenen efsanevi açılış töreni, tarihin en büyük olimpiyat gösterilerinden biri sayılır.
+      </p>
+    </div>
+    <div class="card-video-local">
+      <video controls preload="metadata" style="width:100%;display:block;background:#000">
+        <source src="atina.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+</div><!-- /athletes-grid -->
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <p>Yunanistan Olimpiyat Şöhret Salonu • MÖ 776 — Günümüz • Spor, Beden Eğitimi ve Ruhsal Güç</p>
+</footer>
+
+<script>
+/* ─ Stars ─ */
+const s = document.getElementById('stars');
+for(let i=0;i<150;i++){
+  const d = document.createElement('div');
+  d.className = 'star';
+  const sz = Math.random()*2.4+0.4;
+  d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${(Math.random()*3+1.5).toFixed(1)}s;--dl:${(Math.random()*4).toFixed(1)}s`;
+  s.appendChild(d);
+}
+
+/* ─ Scroll reveal for cards ─ */
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), i*80);
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.athlete-card').forEach(c=>obs.observe(c));
+
+/* ─ Video loader ─ */
+function loadVideo(thumbEl, videoId){
+  // hide thumb, show iframe
+  thumbEl.classList.add('hidden');
+  const iframeWrap = document.getElementById('iframe-'+videoId);
+  iframeWrap.classList.add('active');
+  iframeWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yunanistan Spor Tarihi</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          gold: '#C9A84C',
+          'deep-gold': '#8B6914',
+          marble: '#F5F0E8',
+          night: '#0A0A0F',
+        },
+        fontFamily: {
+          cinzel: ['"Cinzel Decorative"', 'serif'],
+          'cinzel-plain': ['Cinzel', 'serif'],
+          lato: ['Lato', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  /* ── Fonts ── */
+  body { font-family: 'Lato', sans-serif; background: #0A0A0F; color: #F5F0E8; overflow-x: hidden; }
+
+  /* ── Stars ── */
+  .star {
+    position: absolute; background: white; border-radius: 50%;
+    animation: twinkle var(--d,3s) var(--delay,0s) infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity:.1; transform:scale(1); }
+    to   { opacity:.8; transform:scale(1.3); }
+  }
+
+  /* ── Stadium float ── */
+  .stadium-svg { animation: float 4s ease-in-out infinite; }
+  @keyframes float {
+    0%,100% { transform:translateY(0); }
+    50%      { transform:translateY(-12px); }
+  }
+
+  /* ── Arch draw ── */
+  .arch { stroke-dasharray:300; stroke-dashoffset:300; animation:drawArch 2s ease forwards; }
+  .arch2 { animation-delay:.3s; }
+  @keyframes drawArch { to { stroke-dashoffset:0; } }
+
+  /* ── Flame ── */
+  .flame  { transform-origin:center bottom; animation:flicker .5s ease-in-out infinite alternate; }
+  .flame2 { transform-origin:center bottom; animation:flicker .4s ease-in-out .1s infinite alternate; }
+  .flame3 { transform-origin:center bottom; animation:flicker .6s ease-in-out .2s infinite alternate; }
+  @keyframes flicker {
+    from { transform:scaleX(1) scaleY(1) skewX(0deg); opacity:1; }
+    to   { transform:scaleX(.8) scaleY(1.15) skewX(3deg); opacity:.85; }
+  }
+  .torch-svg { animation:torchGlow 1.5s ease-in-out infinite; }
+  @keyframes torchGlow {
+    0%,100% { filter:drop-shadow(0 0 8px #f97316) drop-shadow(0 0 20px #ef4444); }
+    50%     { filter:drop-shadow(0 0 15px #fbbf24) drop-shadow(0 0 35px #f97316); }
+  }
+
+  /* ── Crowd ── */
+  .crowd-dot { animation:cheer 1s ease-in-out infinite alternate; }
+  @keyframes cheer { from{opacity:.6;} to{opacity:1;} }
+
+  /* ── Runner ── */
+  .runner-body { animation:run .4s ease-in-out infinite alternate; }
+  @keyframes run { 0%{transform:translateX(-8px);} 100%{transform:translateX(8px);} }
+
+  /* ── Title fade ── */
+  .hero-title { animation:fadeDown 1s ease .8s forwards; opacity:0; }
+  .hero-sub   { animation:fadeDown 1s ease 1.1s forwards; opacity:0; }
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .title-gradient {
+    background: linear-gradient(135deg, #C9A84C, #fff8dc, #C9A84C);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+
+  /* ── Scroll hint ── */
+  .scroll-hint {
+    position:absolute; bottom:2rem; left:50%;
+    animation:bounceSlow 2s ease-in-out infinite;
+  }
+  @keyframes bounceSlow {
+    0%,100% { transform:translateX(-50%) translateY(0); }
+    50%     { transform:translateX(-50%) translateY(6px); }
+  }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity:0; transform:translateY(28px);
+    transition:opacity .65s ease, transform .65s ease;
+  }
+  .reveal.in { opacity:1; transform:translateY(0); }
+  .reveal-left  { opacity:0; transform:translateX(-36px); transition:opacity .65s ease, transform .65s ease; }
+  .reveal-right { opacity:0; transform:translateX(36px);  transition:opacity .65s ease, transform .65s ease; }
+  .reveal-left.in,.reveal-right.in { opacity:1; transform:translateX(0); }
+
+  /* ── Card accent bar ── */
+  .card-bar::before {
+    content:''; position:absolute; top:0; left:0;
+    width:4px; height:100%;
+    background:linear-gradient(to bottom,#C9A84C,transparent);
+    border-radius:4px 0 0 4px;
+  }
+
+  /* ── Section divider ── */
+  .divider-gold::before { content:''; position:absolute; top:50%; left:0; width:35%; height:1px; background:linear-gradient(to right,transparent,#C9A84C); }
+  .divider-gold::after  { content:''; position:absolute; top:50%; right:0; width:35%; height:1px; background:linear-gradient(to left,transparent,#C9A84C); }
+
+  /* ── Nav ── */
+  nav { position:fixed; top:0; left:0; right:0; z-index:100;
+        background:rgba(10,10,15,0.85); backdrop-filter:blur(12px);
+        border-bottom:1px solid rgba(201,168,76,0.15); }
+  nav a { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.15em; color:rgba(201,168,76,.7);
+          text-transform:uppercase; text-decoration:none; padding:.5rem .75rem;
+          transition:color .2s; border-radius:6px; }
+  nav a:hover { color:#C9A84C; background:rgba(201,168,76,.07); }
+
+  /* ── Stat card ── */
+  .stat-card { background:rgba(255,255,255,.03); border:1px solid rgba(201,168,76,.15);
+               border-radius:1rem; padding:1.25rem; text-align:center; cursor:default;
+               transition:transform .3s, border-color .3s, box-shadow .3s; }
+  .stat-card:hover { transform:translateY(-5px); border-color:rgba(201,168,76,.45);
+                     box-shadow:0 20px 40px rgba(201,168,76,.12); }
+
+  /* ── Info card ── */
+  .info-card { position:relative; background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(201,168,76,.03));
+               border:1px solid rgba(201,168,76,.18); border-radius:1rem; padding:1.4rem;
+               overflow:hidden; transition:transform .3s, border-color .3s, box-shadow .3s; }
+  .info-card:hover { transform:translateY(-4px); border-color:rgba(201,168,76,.42);
+                     box-shadow:0 18px 38px rgba(201,168,76,.13); }
+
+  /* ── Law row ── */
+  .law-row { display:flex; align-items:flex-start; gap:1rem;
+             background:rgba(255,255,255,.03); border:1px solid rgba(201,168,76,.15);
+             border-radius:1rem; padding:1.1rem; transition:border-color .3s; }
+  .law-row:hover { border-color:rgba(201,168,76,.38); }
+  .law-num { background:rgba(201,168,76,.15); color:#C9A84C;
+             font-family:'Cinzel Decorative',serif; font-weight:900; font-size:1rem;
+             min-width:2.8rem; height:2.8rem; border-radius:.6rem;
+             display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+  /* ── Timeline badge ── */
+  .yr-badge { background:linear-gradient(135deg,#8B6914,#C9A84C); color:#0A0A0F;
+              font-family:'Cinzel Decorative',serif; font-weight:900;
+              border-radius:.75rem; min-height:80px; display:flex; flex-direction:column;
+              align-items:center; justify-content:center; text-align:center; padding:.8rem;
+              box-shadow:0 8px 28px rgba(201,168,76,.3); }
+
+  /* ── Problem card ── */
+  .prob-card { background:rgba(255,255,255,.03); border:1px solid rgba(201,168,76,.13);
+               border-radius:1rem; padding:1.2rem; transition:border-color .3s; }
+  .prob-card:hover { border-color:rgba(201,168,76,.35); }
+
+  /* ── bg glow ── */
+  .bg-glow {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(45,106,143,.13) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(201,168,76,.07) 0%, transparent 50%),
+      #0A0A0F;
+  }
+</style>
+</head>
+<body class="bg-night text-marble">
+
+<!-- ░░ STARS ░░ -->
+<div id="stars" class="fixed inset-0 pointer-events-none z-0 bg-glow"></div>
+
+<!-- ░░ NAV ░░ -->
+<nav class="px-4 py-3">
+  <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-1">
+    <a href="#genel">Genel Bilgiler</a>
+    <a href="#hukuk">Spor Hukuku</a>
+    <a href="#tarih">Tarihsel Süreç</a>
+    <a href="#yonetim">Spor Yönetimi</a>
+    <a href="#istatistik">İstatistikler</a>
+    <a href="#madalya">Olimpiyat</a>
+    <a href="#branslar">Branşlar</a>
+    <a href="#sonuc">Sonuç</a>
+  </div>
+</nav>
+
+<!-- ░░ HERO ░░ -->
+<section class="relative min-h-screen flex flex-col items-center justify-center z-10 text-center px-6 pt-24 pb-16">
+  <!-- Animated Stadium -->
+  <div class="w-full max-w-lg mb-8" style="filter:drop-shadow(0 0 40px rgba(201,168,76,0.4))">
+    <svg class="stadium-svg w-full" viewBox="0 0 500 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="skyG" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#1a3a5c"/><stop offset="100%" stop-color="#0A0A0F"/>
+        </radialGradient>
+        <radialGradient id="flameG" cx="50%" cy="0%" r="80%">
+          <stop offset="0%" stop-color="#FFF176"/>
+          <stop offset="40%" stop-color="#FF9800"/>
+          <stop offset="100%" stop-color="#F44336" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="glow2"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <rect width="500" height="280" fill="url(#skyG)" rx="20"/>
+      <!-- bg stars -->
+      <circle cx="60" cy="25" r="1" fill="white" opacity=".6"/><circle cx="140" cy="18" r="1.5" fill="white" opacity=".8"/>
+      <circle cx="250" cy="12" r="1" fill="white" opacity=".5"/><circle cx="360" cy="22" r="1" fill="white" opacity=".7"/>
+      <circle cx="440" cy="35" r="1.5" fill="white" opacity=".6"/><circle cx="80" cy="55" r="1" fill="white" opacity=".4"/>
+      <!-- ground -->
+      <ellipse cx="250" cy="240" rx="220" ry="25" fill="#1a3a1a" opacity=".8"/>
+      <ellipse cx="250" cy="240" rx="190" ry="18" fill="#2d5a1e" opacity=".7"/>
+      <!-- outer arch -->
+      <path d="M60 240 Q60 120 250 100 Q440 120 440 240" fill="rgba(245,240,232,0.08)" stroke="#C9A84C" stroke-width="2" class="arch"/>
+      <!-- columns -->
+      <g fill="#C9A84C" opacity=".9">
+        <rect x="85" y="175" width="8" height="60" rx="2"/><rect x="115" y="165" width="8" height="70" rx="2"/>
+        <rect x="145" y="155" width="8" height="78" rx="2"/><rect x="175" y="148" width="8" height="85" rx="2"/>
+        <rect x="210" y="143" width="8" height="90" rx="2"/><rect x="250" y="140" width="8" height="93" rx="2"/>
+        <rect x="282" y="143" width="8" height="90" rx="2"/><rect x="317" y="148" width="8" height="85" rx="2"/>
+        <rect x="347" y="155" width="8" height="78" rx="2"/><rect x="377" y="165" width="8" height="70" rx="2"/>
+        <rect x="407" y="175" width="8" height="60" rx="2"/>
+      </g>
+      <!-- capitals -->
+      <g fill="#C9A84C">
+        <rect x="82" y="173" width="14" height="3" rx="1"/><rect x="112" y="163" width="14" height="3" rx="1"/>
+        <rect x="142" y="153" width="14" height="3" rx="1"/><rect x="172" y="146" width="14" height="3" rx="1"/>
+        <rect x="207" y="141" width="14" height="3" rx="1"/><rect x="247" y="138" width="14" height="3" rx="1"/>
+        <rect x="279" y="141" width="14" height="3" rx="1"/><rect x="314" y="146" width="14" height="3" rx="1"/>
+        <rect x="344" y="153" width="14" height="3" rx="1"/><rect x="374" y="163" width="14" height="3" rx="1"/>
+        <rect x="404" y="173" width="14" height="3" rx="1"/>
+      </g>
+      <path d="M80 175 Q250 95 420 175" fill="none" stroke="#C9A84C" stroke-width="3" opacity=".6" class="arch arch2"/>
+      <!-- seats -->
+      <g opacity=".5">
+        <path d="M95 195 Q250 130 405 195" fill="none" stroke="rgba(200,180,150,0.4)" stroke-width="8"/>
+        <path d="M100 210 Q250 148 400 210" fill="none" stroke="rgba(200,180,150,0.3)" stroke-width="8"/>
+        <path d="M105 225 Q250 165 395 225" fill="none" stroke="rgba(200,180,150,0.25)" stroke-width="8"/>
+      </g>
+      <!-- crowd -->
+      <g filter="url(#glow2)">
+        <circle class="crowd-dot" cx="130" cy="193" r="3" fill="#e74c3c" style="animation-delay:0s"/>
+        <circle class="crowd-dot" cx="155" cy="188" r="3" fill="#3498db" style="animation-delay:.1s"/>
+        <circle class="crowd-dot" cx="180" cy="183" r="3" fill="#f39c12" style="animation-delay:.2s"/>
+        <circle class="crowd-dot" cx="210" cy="179" r="3" fill="#2ecc71" style="animation-delay:.3s"/>
+        <circle class="crowd-dot" cx="240" cy="176" r="3" fill="#e74c3c" style="animation-delay:.15s"/>
+        <circle class="crowd-dot" cx="270" cy="176" r="3" fill="#9b59b6" style="animation-delay:.25s"/>
+        <circle class="crowd-dot" cx="300" cy="179" r="3" fill="#f39c12" style="animation-delay:.05s"/>
+        <circle class="crowd-dot" cx="330" cy="183" r="3" fill="#1abc9c" style="animation-delay:.35s"/>
+        <circle class="crowd-dot" cx="360" cy="188" r="3" fill="#e74c3c" style="animation-delay:.18s"/>
+        <circle class="crowd-dot" cx="385" cy="193" r="3" fill="#3498db" style="animation-delay:.28s"/>
+        <circle class="crowd-dot" cx="145" cy="207" r="2.5" fill="#f39c12" style="animation-delay:.12s"/>
+        <circle class="crowd-dot" cx="175" cy="202" r="2.5" fill="#2ecc71" style="animation-delay:.22s"/>
+        <circle class="crowd-dot" cx="205" cy="197" r="2.5" fill="#9b59b6" style="animation-delay:.32s"/>
+        <circle class="crowd-dot" cx="240" cy="193" r="2.5" fill="#e74c3c" style="animation-delay:.08s"/>
+        <circle class="crowd-dot" cx="270" cy="192" r="2.5" fill="#f39c12" style="animation-delay:.18s"/>
+        <circle class="crowd-dot" cx="300" cy="193" r="2.5" fill="#3498db" style="animation-delay:.38s"/>
+        <circle class="crowd-dot" cx="335" cy="197" r="2.5" fill="#1abc9c" style="animation-delay:.14s"/>
+        <circle class="crowd-dot" cx="360" cy="202" r="2.5" fill="#e74c3c" style="animation-delay:.24s"/>
+        <circle class="crowd-dot" cx="375" cy="207" r="2.5" fill="#9b59b6" style="animation-delay:.34s"/>
+      </g>
+      <!-- field -->
+      <ellipse cx="250" cy="245" rx="160" ry="18" fill="#2d5a1e"/>
+      <ellipse cx="250" cy="245" rx="130" ry="13" fill="#3a7a28" opacity=".8"/>
+      <ellipse cx="250" cy="245" rx="140" ry="16" fill="none" stroke="white" stroke-width="1" opacity=".3"/>
+      <!-- torches -->
+      <g transform="translate(35,80)" class="torch-svg">
+        <rect x="8" y="35" width="6" height="30" rx="2" fill="#C9A84C"/>
+        <polygon points="11,35 6,10 16,10" fill="#8B6914"/>
+        <ellipse class="flame" cx="11" cy="8" rx="5" ry="8" fill="url(#flameG)"/>
+        <ellipse class="flame2" cx="8" cy="6" rx="3" ry="6" fill="#FF9800" opacity=".8"/>
+        <ellipse class="flame3" cx="14" cy="7" rx="2.5" ry="5" fill="#FFF176" opacity=".6"/>
+      </g>
+      <g transform="translate(445,80)" class="torch-svg">
+        <rect x="8" y="35" width="6" height="30" rx="2" fill="#C9A84C"/>
+        <polygon points="11,35 6,10 16,10" fill="#8B6914"/>
+        <ellipse class="flame" cx="11" cy="8" rx="5" ry="8" fill="url(#flameG)"/>
+        <ellipse class="flame2" cx="8" cy="6" rx="3" ry="6" fill="#FF9800" opacity=".8"/>
+        <ellipse class="flame3" cx="14" cy="7" rx="2.5" ry="5" fill="#FFF176" opacity=".6"/>
+      </g>
+      <!-- olympic rings -->
+      <g transform="translate(185,52)" opacity=".85">
+        <circle cx="15" cy="15" r="11" fill="none" stroke="#0085C7" stroke-width="3"/>
+        <circle cx="38" cy="15" r="11" fill="none" stroke="#000" stroke-width="3"/>
+        <circle cx="61" cy="15" r="11" fill="none" stroke="#DF0024" stroke-width="3"/>
+        <circle cx="26" cy="26" r="11" fill="none" stroke="#F4C300" stroke-width="3"/>
+        <circle cx="49" cy="26" r="11" fill="none" stroke="#009F6B" stroke-width="3"/>
+      </g>
+      <!-- runner -->
+      <g transform="translate(195,232)" class="runner-body">
+        <circle cx="8" cy="4" r="4" fill="#F5F0E8"/>
+        <line x1="8" y1="8" x2="8" y2="18" stroke="#F5F0E8" stroke-width="2"/>
+        <line x1="8" y1="11" x2="3" y2="17" stroke="#F5F0E8" stroke-width="2"/>
+        <line x1="8" y1="11" x2="13" y2="17" stroke="#F5F0E8" stroke-width="2"/>
+        <line x1="8" y1="18" x2="3" y2="25" stroke="#F5F0E8" stroke-width="2"/>
+        <line x1="8" y1="18" x2="13" y2="25" stroke="#F5F0E8" stroke-width="2"/>
+      </g>
+    </svg>
+  </div>
+
+  <h1 class="hero-title font-cinzel font-black title-gradient leading-tight" style="font-size:clamp(2.2rem,6vw,5rem)">
+    YUNANİSTAN<br>SPOR TARİHİ
+  </h1>
+  <p class="hero-sub font-cinzel-plain text-gold uppercase tracking-widest mt-3 text-sm">
+    Antik Dönemden Günümüze • Kapsamlı Bir İnceleme
+  </p>
+
+  <div class="scroll-hint flex flex-col items-center gap-2 text-xs tracking-widest" style="color:rgba(201,168,76,.6)">
+    <span>AŞAĞI KAY</span>
+    <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+      <path d="M8 0v20M1 13l7 8 7-8" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ░░ DIVIDER ░░ -->
+<div class="relative text-center my-10 z-10 divider-gold">
+  <span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">⚡</span>
+</div>
+
+<!-- ════════════════════════════════════
+     SLIDE 2 — GENEL BİLGİLER
+════════════════════════════════════ -->
+<section id="genel" class="relative z-10 max-w-5xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">🏛️</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">Yunanistan</h2>
+  </div>
+  <p class="text-center text-marble/50 font-cinzel-plain text-xs tracking-widest mb-10 uppercase">Genel Bilgiler</p>
+
+  <!-- Info box — same layout as Türkiye slide 2 -->
+  <div class="info-card card-bar mb-8 reveal">
+    <div class="grid gap-3" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+      <div class="flex flex-col gap-2 text-sm font-lato text-marble/80 leading-relaxed">
+        <p>🏛️ <span class="text-gold font-semibold">Kuruluş:</span> Yunanistan modern devlet olarak 1822'de bağımsızlığını ilan etmiş, 1974'te bugünkü demokratik cumhuriyet yapısına kavuşmuştur.</p>
+        <p>🏛️ <span class="text-gold font-semibold">Yönetim Şekli:</span> Parlamenter Cumhuriyet</p>
+        <p>👥 <span class="text-gold font-semibold">Nüfus:</span> 10.400.000+</p>
+        <p>🗺️ <span class="text-gold font-semibold">Yüzölçümü:</span> 131.957 km²</p>
+      </div>
+      <div class="flex flex-col gap-2 text-sm font-lato text-marble/80 leading-relaxed">
+        <p>🌍 <span class="text-gold font-semibold">Coğrafi Konum:</span> Güneydoğu Avrupa, Balkan Yarımadası'nın güney ucu</p>
+        <p>🏙️ <span class="text-gold font-semibold">Bölge Sayısı:</span> 13 bölge (periferya), 325 belediye</p>
+        <p>🏛️ <span class="text-gold font-semibold">Başkent:</span> Atina</p>
+        <p>🌆 <span class="text-gold font-semibold">En Kalabalık Şehir:</span> Atina (Büyükşehir: 3.7M+)</p>
+        <p>💰 <span class="text-gold font-semibold">Kişi Başı Yıllık Gelir:</span> 22.000$+ (2024)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- stat cards -->
+  <div class="grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+    <div class="stat-card reveal"><div class="text-3xl mb-2">🏛️</div><div class="font-cinzel text-2xl font-black text-gold">1822</div><div class="text-marble/60 text-xs mt-1">Bağımsızlık Yılı</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">👥</div><div class="font-cinzel text-2xl font-black text-gold">10.4M+</div><div class="text-marble/60 text-xs mt-1">Nüfus</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">🗺️</div><div class="font-cinzel text-2xl font-black text-gold">131.957</div><div class="text-marble/60 text-xs mt-1">km² Yüzölçümü</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">🏙️</div><div class="font-cinzel text-2xl font-black text-gold">13</div><div class="text-marble/60 text-xs mt-1">Bölge</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">💰</div><div class="font-cinzel text-2xl font-black text-gold">22.000$+</div><div class="text-marble/60 text-xs mt-1">Kişi Başı Gelir</div></div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="relative text-center my-10 z-10 divider-gold"><span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">⚖️</span></div>
+
+<!-- ════════════════════════════════════
+     SLIDE 3 — SPOR HUKUKU
+════════════════════════════════════ -->
+<section id="hukuk" class="relative z-10 max-w-5xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">⚖️</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">Yunanistan</h2>
+  </div>
+  <p class="text-center text-gold font-cinzel-plain text-sm tracking-widest mb-10 uppercase font-semibold">SPOR HUKUKU</p>
+
+  <div class="flex flex-col gap-3">
+    <div class="law-row reveal">
+      <div class="law-num">1</div>
+      <div>
+        <h3 class="font-cinzel-plain font-semibold text-gold mb-1">2725/1999 Sayılı Spor Kanunu</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Yunanistan'ın temel spor mevzuatı. Spor federasyonlarının yapısını, devlet denetimini, sporcu haklarını ve spor tesislerinin yönetimini düzenler.</p>
+      </div>
+    </div>
+    <div class="law-row reveal">
+      <div class="law-num">2</div>
+      <div>
+        <h3 class="font-cinzel-plain font-semibold text-gold mb-1">Yunanistan Anayasası — 16. Madde</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Sporun devlet tarafından desteklenmesini anayasal güvence altına alır. Devlet; sporcuların eğitimini, fiziksel gelişimini ve spor altyapısını desteklemekle yükümlüdür.</p>
+      </div>
+    </div>
+    <div class="law-row reveal">
+      <div class="law-num">3</div>
+      <div>
+        <h3 class="font-cinzel-plain font-semibold text-gold mb-1">4479/2017 Sayılı Spor Kulüpleri Kanunu</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Spor kulüplerinin tüzel kişiliğini, mali şeffaflığını ve idari yapısını düzenleyen güncel mevzuat. Profesyonel kulüplerin borsaya açılmasına da zemin hazırlamıştır.</p>
+      </div>
+    </div>
+    <div class="law-row reveal">
+      <div class="law-num">4</div>
+      <div>
+        <h3 class="font-cinzel-plain font-semibold text-gold mb-1">Sporda Şiddetle Mücadele Kanunu</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Stadyumlarda şiddet ve düzensizliğin önlenmesine ilişkin düzenlemeler; taraftar gruplarının denetimi, bilet sistemi ve güvenlik protokolleri.</p>
+      </div>
+    </div>
+    <div class="law-row reveal">
+      <div class="law-num">5</div>
+      <div>
+        <h3 class="font-cinzel-plain font-semibold text-gold mb-1">Doping ile Mücadele Mevzuatı</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">WADA uyumlu ulusal doping kontrol sistemi. Yunan Doping Kontrol Merkezi (ESKAN) tarafından yürütülür; sporculara yönelik test ve yaptırım süreçleri tanımlanmıştır.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="relative text-center my-10 z-10 divider-gold"><span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">🏛️</span></div>
+
+<!-- ════════════════════════════════════
+     SLIDE 4-5 — TARİHSEL SÜREÇ
+════════════════════════════════════ -->
+<section id="tarih" class="relative z-10 max-w-5xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">⏳</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">Geçmişten Günümüze Spor Yönetimi</h2>
+  </div>
+  <p class="text-center text-marble/50 font-cinzel-plain text-xs tracking-widest mb-10 uppercase">MÖ 776 – Günümüz</p>
+
+  <div class="flex flex-col gap-6">
+
+    <!-- MÖ 776 -->
+    <div class="grid gap-4 items-start reveal-left" style="grid-template-columns:110px 1fr">
+      <div class="yr-badge"><span class="text-lg">776</span><span class="text-xs opacity-75">MÖ</span></div>
+      <div class="info-card card-bar">
+        <div class="text-2xl mb-2">🏟️</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">İlk Olimpiyat Oyunları</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Olympia'da ilk resmi Olimpiyat Oyunları düzenlendi. Tek yarışma 192 metrelik stadion koşusuydu. Kazanan pişirici Koroibos oldu. Oyunlar her 4 yılda bir (olimpiad) tekrar ederdi.</p>
+      </div>
+    </div>
+
+    <!-- MÖ 708 -->
+    <div class="grid gap-4 items-start reveal-right" style="grid-template-columns:1fr 110px">
+      <div class="info-card card-bar" style="order:-1">
+        <div class="text-2xl mb-2">🤼</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">Pentatlon ve Güreşin Eklenmesi</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Koşu, uzun atlama, disk atma, cirit atma ve güreşten oluşan pentatlon programa girdi. Olimpiyat bağlamında spor yönetiminin ilk sistematik çerçevesi oluştu: yargıcılar (hellanodikai), kural ve cezalar belirlendi.</p>
+      </div>
+      <div class="yr-badge" style="order:1"><span class="text-lg">708</span><span class="text-xs opacity-75">MÖ</span></div>
+    </div>
+
+    <!-- MÖ 648 -->
+    <div class="grid gap-4 items-start reveal-left" style="grid-template-columns:110px 1fr">
+      <div class="yr-badge"><span class="text-lg">648</span><span class="text-xs opacity-75">MÖ</span></div>
+      <div class="info-card card-bar">
+        <div class="text-2xl mb-2">🐴</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">Pankration ve Araba Yarışları</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Sınırsız kural tanımayan dövüş sporu pankration ve dört atlı araba yarışı (tethrippon) programa eklendi. Araba yarışları aristokrasinin statü göstergesine dönüştü; at sahibi zenginler adlarını tescil ettirirdi.</p>
+      </div>
+    </div>
+
+    <!-- MÖ 490 -->
+    <div class="grid gap-4 items-start reveal-right" style="grid-template-columns:1fr 110px">
+      <div class="info-card card-bar" style="order:-1">
+        <div class="text-2xl mb-2">🏃</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">Maraton Efsanesi</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Maraton Muharebesi'nin ardından Pheidippides, Atina'ya 42 km koşarak zafer haberini iletti. Bu efsane; 1896 Atina Olimpiyatları'nda maraton yarışının programa girmesine ilham verdi.</p>
+      </div>
+      <div class="yr-badge" style="order:1"><span class="text-lg">490</span><span class="text-xs opacity-75">MÖ</span></div>
+    </div>
+
+    <!-- MS 393 -->
+    <div class="grid gap-4 items-start reveal-left" style="grid-template-columns:110px 1fr">
+      <div class="yr-badge"><span class="text-lg">393</span><span class="text-xs opacity-75">MS</span></div>
+      <div class="info-card card-bar">
+        <div class="text-2xl mb-2">⚔️</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">Oyunların Yasaklanması</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Roma İmparatoru I. Theodosius, putperest gelenekler içerdiği gerekçesiyle tüm Olimpiyat Oyunları'nı yasakladı. 1169 yıl boyunca oyunlar düzenlenmedi; antik spor yönetim yapısı tamamen çöktü.</p>
+      </div>
+    </div>
+
+    <!-- 1896 -->
+    <div class="grid gap-4 items-start reveal-right" style="grid-template-columns:1fr 110px">
+      <div class="info-card card-bar" style="order:-1">
+        <div class="text-2xl mb-2">🏅</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">Modern Olimpiyatların Yeniden Doğuşu</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Pierre de Coubertin'in öncülüğüyle Atina'da ilk modern Olimpiyat Oyunları düzenlendi. 14 ülke, 241 sporcu, 43 yarışma dalı. Yunan sporcu Spyridon Louis, maraton yarışını kazanarak ulusal kahraman oldu.</p>
+      </div>
+      <div class="yr-badge" style="order:1"><span class="text-lg">1896</span><span class="text-xs opacity-75">MS</span></div>
+    </div>
+
+    <!-- 1961 -->
+    <div class="grid gap-4 items-start reveal-left" style="grid-template-columns:110px 1fr">
+      <div class="yr-badge"><span class="text-lg">1961</span><span class="text-xs opacity-75">MS</span></div>
+      <div class="info-card card-bar">
+        <div class="text-2xl mb-2">🏗️</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">Genel Spor Sekreterliği'nin Kurulması</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Yunanistan'da sporu merkezi olarak koordine etmek amacıyla Genel Spor Sekreterliği (GSS/GGA) kuruldu. Federasyonlara mali destek, lisanslama ve spor tesisi yapımı bu çatı altında yönetilmeye başlandı.</p>
+      </div>
+    </div>
+
+    <!-- 2004 -->
+    <div class="grid gap-4 items-start reveal-right" style="grid-template-columns:1fr 110px">
+      <div class="info-card card-bar" style="order:-1">
+        <div class="text-2xl mb-2">🔥</div>
+        <h3 class="font-cinzel-plain text-gold mb-1">Atina 2004: Eve Dönüş</h3>
+        <p class="text-marble/70 text-sm font-lato leading-relaxed">Olimpiyat Oyunları 108 yıl sonra Yunanistan'a geri döndü. 10.625 sporcu, 201 ülke, 28 spor dalı. Yunanistan 6 altın madalyayla toplam 16 madalya kazandı. Olimpiyat Village ve OAKA kompleksi kalıcı spor mirası olarak bırakıldı.</p>
+      </div>
+      <div class="yr-badge" style="order:1"><span class="text-lg">2004</span><span class="text-xs opacity-75">MS</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="relative text-center my-10 z-10 divider-gold"><span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">🏛️</span></div>
+
+<!-- ════════════════════════════════════
+     SLIDE 8 — SPOR YÖNETİMİNİN GÜNCEL YAPISI
+════════════════════════════════════ -->
+<section id="yonetim" class="relative z-10 max-w-5xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">🏛️</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">Yunanistan</h2>
+  </div>
+  <p class="text-center text-gold font-cinzel-plain text-sm tracking-widest mb-10 uppercase font-semibold">Yunan Spor Yönetiminin Güncel Yapısı</p>
+
+  <div class="grid gap-4 mb-8" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div class="info-card card-bar reveal text-center">
+      <div class="text-3xl mb-3">🏛️</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-2">1. Genel Spor Sekreterliği (GGA)</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">Spor politikasının ana yürütme organı. Eğitim ve Din Bakanlığı bünyesinde faaliyet gösterir. Federasyon denetimi, lisanslama, tesis ve bütçe yönetiminden sorumludur.</p>
+    </div>
+    <div class="info-card card-bar reveal text-center">
+      <div class="text-3xl mb-3">🏅</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-2">2. Yunanistan Milli Olimpiyat Komitesi (HOC)</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">IOC ile doğrudan bağlantılı bağımsız kuruluş. Olimpiyat kadrosunu seçer, olimpiyat eğitim merkezlerini yönetir ve uluslararası olimpik temsilden sorumludur.</p>
+    </div>
+    <div class="info-card card-bar reveal text-center">
+      <div class="text-3xl mb-3">⚽</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-2">3. Spor Federasyonları</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">Her branş için ayrı federasyon. En büyüğü Yunan Futbol Federasyonu (EPO). Federasyonlar GGA denetimine tabi olmakla birlikte kendi iç yönetim özerkliğine sahiptir.</p>
+    </div>
+    <div class="info-card card-bar reveal text-center">
+      <div class="text-3xl mb-3">🏙️</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-2">4. Yerel Yönetimler</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">Belediyeler, yerel spor altyapısını finanse eder ve yönetir. Atina Belediyesi, kendi bünyesinde çok sayıda amatör spor kulübü desteklemektedir.</p>
+    </div>
+  </div>
+
+  <!-- GSS/GGA detay kutusu -->
+  <div class="info-card card-bar reveal">
+    <h3 class="font-cinzel-plain text-gold font-semibold mb-3 text-center">Genel Spor Sekreterliği (GGA) — Görev Alanları</h3>
+    <div class="grid gap-3 text-sm font-lato text-marble/75 leading-relaxed" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+      <p>✦ Ulusal spor politikalarının oluşturulması ve uygulanması</p>
+      <p>✦ Spor federasyonlarına mali destek ve denetim</p>
+      <p>✦ Ulusal spor tesislerinin inşası ve bakımı</p>
+      <p>✦ Sporcu lisanslama ve antrenör belgelendirme</p>
+      <p>✦ Doping kontrol sistemiyle koordinasyon</p>
+      <p>✦ Amatör sporu teşvik programları</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="relative text-center my-10 z-10 divider-gold"><span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">📊</span></div>
+
+<!-- ════════════════════════════════════
+     SLIDE 33 — SPORCU İSTATİSTİKLERİ
+════════════════════════════════════ -->
+<section id="istatistik" class="relative z-10 max-w-5xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">📊</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">Yunanistan</h2>
+  </div>
+  <p class="text-center text-gold font-cinzel-plain text-sm tracking-widest mb-10 uppercase font-semibold">Spor ve Sporcu İstatistikleri</p>
+
+  <div class="grid gap-4 mb-8" style="grid-template-columns:repeat(auto-fit,minmax(175px,1fr))">
+    <div class="stat-card reveal"><div class="text-3xl mb-2">🏅</div><div class="font-cinzel text-2xl font-black text-gold">54</div><div class="text-marble/60 text-xs mt-1">Faal Spor Federasyonu</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">🏆</div><div class="font-cinzel text-2xl font-black text-gold">28</div><div class="text-marble/60 text-xs mt-1">Olimpik Spor Federasyonu</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">👤</div><div class="font-cinzel text-2xl font-black text-gold">1.2M+</div><div class="text-marble/60 text-xs mt-1">Lisanslı Sporcu</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">⚽</div><div class="font-cinzel text-2xl font-black text-gold">Futbol</div><div class="text-marble/60 text-xs mt-1">En Fazla Lisanslı Branş</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">🤼</div><div class="font-cinzel text-2xl font-black text-gold">Güreş</div><div class="text-marble/60 text-xs mt-1">Tarihi En Güçlü Branş</div></div>
+    <div class="stat-card reveal"><div class="text-3xl mb-2">🏊</div><div class="font-cinzel text-2xl font-black text-gold">Su Sporları</div><div class="text-marble/60 text-xs mt-1">Uluslararası Başarı</div></div>
+  </div>
+
+  <!-- Olimpiyatlardaki sayılar intro -->
+  <div class="info-card card-bar reveal">
+    <h3 class="font-cinzel-plain text-gold font-semibold mb-3 text-center">Olimpiyatlardaki Sayılar</h3>
+    <div class="grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="text-center p-3 rounded-xl" style="background:rgba(201,168,76,0.07)">
+        <div class="font-cinzel text-3xl font-black text-gold">117</div>
+        <div class="text-marble/60 text-xs mt-1 font-lato">Toplam Olimpiyat Madalyası<br><span class="opacity-60">(Yaz+Kış, Tüm Zamanlar)</span></div>
+      </div>
+      <div class="text-center p-3 rounded-xl" style="background:rgba(201,168,76,0.07)">
+        <div class="font-cinzel text-3xl font-black text-gold">34</div>
+        <div class="text-marble/60 text-xs mt-1 font-lato">Altın Madalya<br><span class="opacity-60">(Tüm Zamanlar)</span></div>
+      </div>
+      <div class="text-center p-3 rounded-xl" style="background:rgba(201,168,76,0.07)">
+        <div class="font-cinzel text-3xl font-black text-gold">2004</div>
+        <div class="text-marble/60 text-xs mt-1 font-lato">En Başarılı Olimpiyat<br><span class="opacity-60">(16 Madalya, Atina)</span></div>
+      </div>
+      <div class="text-center p-3 rounded-xl" style="background:rgba(201,168,76,0.07)">
+        <div class="font-cinzel text-3xl font-black text-gold">1896</div>
+        <div class="text-marble/60 text-xs mt-1 font-lato">İlk Modern Olimpiyat<br><span class="opacity-60">(Ev Sahibi & Şampiyon)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="relative text-center my-10 z-10 divider-gold"><span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">🥇</span></div>
+
+<!-- ════════════════════════════════════
+     SLIDE 34-36 — ALTIN MADALYA / BRANŞLAR
+════════════════════════════════════ -->
+<section id="madalya" class="relative z-10 max-w-5xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">🥇</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">Altın Madalya</h2>
+  </div>
+  <p class="text-center text-marble/50 font-cinzel-plain text-xs tracking-widest mb-10 uppercase">Öne Çıkan Olimpik Başarılar</p>
+
+  <div class="grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+    <div class="info-card card-bar reveal">
+      <div class="text-2xl mb-2">🏃</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-1">Spyridon Louis — 1896</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">İlk modern Olimpiyat'ta maraton yarışını kazanan Yunan sporcu. Ulusal sembol haline geldi; başarısı tüm dünyada maraton sporunun yaygınlaşmasını hızlandırdı.</p>
+    </div>
+    <div class="info-card card-bar reveal">
+      <div class="text-2xl mb-2">🤼</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-1">Güreş — Tarihsel Güç</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">Yunanistan, güreşte tüm zamanların en güçlü ülkelerinden biridir. Kendi topraklarında icad ettiği güreş sporunda düzinelerce olimpiyat madalyası kazanmıştır.</p>
+    </div>
+    <div class="info-card card-bar reveal">
+      <div class="text-2xl mb-2">🚣</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-1">Su Sporları — Modern Dönem</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">Yüzme, kano ve kürek branşlarında özellikle 2000-2012 döneminde uluslararası arenada güçlü bir Yunan varlığı oluştu.</p>
+    </div>
+    <div class="info-card card-bar reveal">
+      <div class="text-2xl mb-2">🥊</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-1">Boks &amp; Atletizm</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">2004 Atina Olimpiyatları'nda Yunan boksör ve atletizm sporcuları, ev sahibi avantajıyla birden fazla madalya kazanarak tarihi bir başarıya imza attı.</p>
+    </div>
+    <div class="info-card card-bar reveal">
+      <div class="text-2xl mb-2">🏋️</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-1">Halter</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">Yunan halterciler, özellikle ağır sıklet kategorilerinde pek çok olimpiyat ve dünya şampiyonluğu kazanmıştır.</p>
+    </div>
+    <div class="info-card card-bar reveal">
+      <div class="text-2xl mb-2">🎾</div>
+      <h3 class="font-cinzel-plain text-gold font-semibold mb-1">Modern Dönem Tenis &amp; Basketbol</h3>
+      <p class="text-marble/70 text-xs font-lato leading-relaxed">Stefanos Tsitsipas ile tenis, FIBA şampiyonlukları ile erkek milli basketbol takımı Yunanistan'ın günümüz uluslararası spor gücünü temsil etmektedir.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="relative text-center my-10 z-10 divider-gold"><span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">⚡</span></div>
+
+<!-- ════════════════════════════════════
+     SLIDE 37-41 — BRANŞLAR
+════════════════════════════════════ -->
+<section id="branslar" class="relative z-10 max-w-5xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">🏅</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">BRANŞLAR</h2>
+  </div>
+  <p class="text-center text-marble/50 font-cinzel-plain text-xs tracking-widest mb-10 uppercase">Antik'ten Günümüze Spor Dalları</p>
+
+  <div class="grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+
+    <div class="stat-card reveal flex flex-col items-center gap-3">
+      <svg viewBox="0 0 80 80" class="w-16 h-16">
+        <g style="animation:jump 1s ease-in-out infinite">
+          <circle cx="40" cy="10" r="7" fill="#C9A84C"/>
+          <line x1="40" y1="17" x2="40" y2="38" stroke="#C9A84C" stroke-width="3" stroke-linecap="round"/>
+          <line x1="40" y1="25" x2="28" y2="33" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="40" y1="25" x2="52" y2="33" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="40" y1="38" x2="28" y2="55" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="40" y1="38" x2="52" y2="55" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="8" y1="35" x2="22" y2="35" stroke="rgba(201,168,76,0.4)" stroke-width="2" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <div>
+        <h3 class="font-cinzel-plain text-gold text-sm font-semibold mb-1">Koşu (Stadion)</h3>
+        <p class="text-marble/60 text-xs font-lato">Stadion (192m), Diaulos (384m) ve Dolichos (4500m) — antik Yunan'ın temel yarış branşları. Günümüzde atletizm olarak yaşamaya devam eder.</p>
+      </div>
+    </div>
+
+    <div class="stat-card reveal flex flex-col items-center gap-3">
+      <svg viewBox="0 0 80 80" class="w-16 h-16">
+        <circle cx="40" cy="12" r="7" fill="#C9A84C"/>
+        <g style="transform-origin:30px 25px; animation:discusThrow .8s ease-in-out infinite alternate">
+          <line x1="40" y1="19" x2="40" y2="40" stroke="#C9A84C" stroke-width="3" stroke-linecap="round"/>
+          <line x1="40" y1="26" x2="22" y2="20" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="18" cy="19" rx="6" ry="4" fill="none" stroke="#C9A84C" stroke-width="2" transform="rotate(-20,18,19)"/>
+          <line x1="40" y1="26" x2="55" y2="33" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <line x1="40" y1="40" x2="30" y2="60" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="40" y1="40" x2="50" y2="60" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <h3 class="font-cinzel-plain text-gold text-sm font-semibold mb-1">Disk Atma</h3>
+        <p class="text-marble/60 text-xs font-lato">Antik Yunan'ın simgesi. Myron'un Diskoboles heykeli bu sporu ölümsüzleştirdi. Modern olimpiyatlarda hâlâ temel bir atletizm branşıdır.</p>
+      </div>
+    </div>
+
+    <div class="stat-card reveal flex flex-col items-center gap-3">
+      <svg viewBox="0 0 80 80" class="w-16 h-16">
+        <g style="animation:wrestle .6s ease-in-out infinite alternate">
+          <circle cx="25" cy="15" r="6" fill="#C9A84C"/>
+          <line x1="25" y1="21" x2="25" y2="40" stroke="#C9A84C" stroke-width="2.5"/>
+          <line x1="25" y1="28" x2="38" y2="32" stroke="#C9A84C" stroke-width="2"/>
+          <line x1="25" y1="40" x2="20" y2="55" stroke="#C9A84C" stroke-width="2"/>
+          <line x1="25" y1="40" x2="32" y2="55" stroke="#C9A84C" stroke-width="2"/>
+        </g>
+        <circle cx="55" cy="15" r="6" fill="rgba(201,168,76,0.5)"/>
+        <line x1="55" y1="21" x2="55" y2="40" stroke="rgba(201,168,76,0.5)" stroke-width="2.5"/>
+        <line x1="55" y1="28" x2="42" y2="32" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+        <line x1="55" y1="40" x2="48" y2="55" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+        <line x1="55" y1="40" x2="60" y2="55" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+        <text x="35" y="38" font-size="12" fill="#C9A84C" opacity=".8">⚡</text>
+      </svg>
+      <div>
+        <h3 class="font-cinzel-plain text-gold text-sm font-semibold mb-1">Güreş (Pale)</h3>
+        <p class="text-marble/60 text-xs font-lato">En prestijli antik spor. Rakibi üç kez yere indiren kazanır. Yunanistan, modern olimpiyatlarda güreşte onlarca madalya kazanmıştır.</p>
+      </div>
+    </div>
+
+    <div class="stat-card reveal flex flex-col items-center gap-3">
+      <svg viewBox="0 0 80 80" class="w-16 h-16">
+        <circle cx="30" cy="18" r="6" fill="#C9A84C"/>
+        <line x1="30" y1="24" x2="30" y2="42" stroke="#C9A84C" stroke-width="2.5"/>
+        <line x1="30" y1="30" x2="45" y2="24" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="38" y1="22" x2="72" y2="10" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="72,10 66,8 67,13" fill="#C9A84C"/>
+        <line x1="30" y1="30" x2="18" y2="36" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="30" y1="42" x2="22" y2="58" stroke="#C9A84C" stroke-width="2"/>
+        <line x1="30" y1="42" x2="38" y2="58" stroke="#C9A84C" stroke-width="2"/>
+      </svg>
+      <div>
+        <h3 class="font-cinzel-plain text-gold text-sm font-semibold mb-1">Cirit Atma</h3>
+        <p class="text-marble/60 text-xs font-lato">Askerî eğitimin parçası olarak doğdu. Akóntios adı verilen cirit kemik veya ağaçtan yapılırdı. Modern javelinde yaşamaya devam eder.</p>
+      </div>
+    </div>
+
+    <div class="stat-card reveal flex flex-col items-center gap-3">
+      <svg viewBox="0 0 80 80" class="w-16 h-16">
+        <g style="animation:chariot .5s ease-in-out infinite alternate">
+          <ellipse cx="22" cy="35" rx="15" ry="8" fill="#8B6914" opacity=".8"/>
+          <ellipse cx="50" cy="35" rx="15" ry="8" fill="#8B6914" opacity=".8"/>
+          <ellipse cx="8" cy="28" rx="7" ry="5" fill="#8B6914" opacity=".8"/>
+          <ellipse cx="36" cy="28" rx="7" ry="5" fill="#8B6914" opacity=".8"/>
+          <path d="M25 30 Q60 25 70 38 Q60 48 35 48 Z" fill="rgba(201,168,76,0.3)" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="52" cy="50" r="10" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <line x1="52" y1="40" x2="52" y2="60" stroke="#C9A84C" stroke-width="1.5"/>
+          <line x1="42" y1="50" x2="62" y2="50" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="45" cy="27" r="5" fill="#C9A84C"/>
+        </g>
+      </svg>
+      <div>
+        <h3 class="font-cinzel-plain text-gold text-sm font-semibold mb-1">Araba Yarışı (Hippios)</h3>
+        <p class="text-marble/60 text-xs font-lato">Aristokrasinin statü göstergesi. Dört atlı araba ile 12 tur. Günümüzde at yarışı ve motor sporları olarak evrilmiştir.</p>
+      </div>
+    </div>
+
+    <div class="stat-card reveal flex flex-col items-center gap-3">
+      <svg viewBox="0 0 80 80" class="w-16 h-16">
+        <circle cx="40" cy="12" r="7" fill="#C9A84C"/>
+        <line x1="40" y1="19" x2="40" y2="42" stroke="#C9A84C" stroke-width="3"/>
+        <line x1="40" y1="27" x2="25" y2="22" stroke="#C9A84C" stroke-width="2.5"/>
+        <line x1="40" y1="27" x2="55" y2="22" stroke="#C9A84C" stroke-width="2.5"/>
+        <line x1="40" y1="42" x2="28" y2="60" stroke="#C9A84C" stroke-width="2.5"/>
+        <line x1="40" y1="42" x2="52" y2="60" stroke="#C9A84C" stroke-width="2.5"/>
+        <text x="12" y="18" font-size="9" fill="rgba(201,168,76,0.7)">🏅</text>
+        <text x="52" y="18" font-size="9" fill="rgba(201,168,76,0.7)">🏅</text>
+        <text x="10" y="45" font-size="9" fill="rgba(201,168,76,0.7)">🏅</text>
+        <text x="54" y="45" font-size="9" fill="rgba(201,168,76,0.7)">🏅</text>
+        <text x="31" y="72" font-size="9" fill="rgba(201,168,76,0.7)">🏅</text>
+      </svg>
+      <div>
+        <h3 class="font-cinzel-plain text-gold text-sm font-semibold mb-1">Pentatlon</h3>
+        <p class="text-marble/60 text-xs font-lato">Koşu, atlama, disk, cirit ve güreş — beş dalın birleşimi. En çok yönlü sporcu ünvanı. Modern pentatlon olarak Olimpiyatlar'da yaşar.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="relative text-center my-10 z-10 divider-gold"><span class="font-cinzel text-gold text-xl relative z-10 bg-night px-4">🌿</span></div>
+
+<!-- ════════════════════════════════════
+     SLIDE 42-47 — SONUÇ
+════════════════════════════════════ -->
+<section id="sonuc" class="relative z-10 max-w-5xl mx-auto px-6 py-10 mb-16">
+  <div class="flex items-center gap-3 mb-2 justify-center">
+    <span class="text-3xl">📋</span>
+    <h2 class="font-cinzel text-gold" style="font-size:clamp(1.4rem,3vw,2.2rem)">SONUÇ</h2>
+  </div>
+  <p class="text-center text-marble/50 font-cinzel-plain text-xs tracking-widest mb-10 uppercase">Genel Değerlendirme</p>
+
+  <!-- Genel özet -->
+  <div class="info-card card-bar mb-6 reveal">
+    <p class="text-marble/80 text-sm font-lato leading-relaxed text-center max-w-3xl mx-auto">
+      Yunanistan'da spor yönetimi, <span class="text-gold font-semibold">devletin</span>, <span class="text-gold font-semibold">bağımsız federasyonların</span> ve <span class="text-gold font-semibold">Milli Olimpiyat Komitesi'nin</span> birlikte şekillendirdiği bir yapıdır. Spor, Yunanistan için salt bir fiziksel aktivite değil; 2800 yıllık kültürel kimliğin ve uygarlık mirasının yaşayan bir parçasıdır.
+    </p>
+  </div>
+
+  <!-- Devletin Rolü -->
+  <div class="info-card card-bar mb-4 reveal">
+    <h3 class="font-cinzel-plain text-gold font-semibold mb-2">Devletin Rolü</h3>
+    <p class="text-marble/70 text-sm font-lato leading-relaxed">Yunanistan'da spor yönetiminin ana aktörü <strong class="text-gold">Genel Spor Sekreterliği (GGA)</strong>'dır. Sekreterlik; spor politikalarının belirlenmesi, federasyonlara mali destek sağlanması, ulusal tesislerin yönetimi ve sporun topluma yaygınlaştırılması alanlarında etkin rol oynar.</p>
+  </div>
+
+  <!-- HOC -->
+  <div class="info-card card-bar mb-4 reveal">
+    <h3 class="font-cinzel-plain text-gold font-semibold mb-2">Yunanistan Milli Olimpiyat Komitesi (HOC)</h3>
+    <p class="text-marble/70 text-sm font-lato leading-relaxed">HOC, Yunanistan'ın Olimpiyat Oyunları'ndaki temsilini sağlayan bağımsız bir kuruluştur. IOC ile doğrudan bağlantılıdır; olimpik spor dallarının gelişimini destekler ve Atina Olimpiyat Eğitim Merkezi'ni yönetir.</p>
+  </div>
+
+  <!-- Yerel Yönetimler -->
+  <div class="info-card card-bar mb-8 reveal">
+    <h3 class="font-cinzel-plain text-gold font-semibold mb-2">Yerel Yönetimler ve Spor Kulüpleri</h3>
+    <p class="text-marble/70 text-sm font-lato leading-relaxed">Belediyeler, yerel spor altyapısını finanse eder ve amatör spora destek sağlar. Yunanistan'daki köklü futbol kulüpleri (Olympiacos, Panathinaikos, AEK Atina, PAOK) ülkenin en güçlü sivil kurumları arasında sayılmaktadır.</p>
+  </div>
+
+  <!-- Mevcut Sorunlar -->
+  <h3 class="font-cinzel-plain text-gold text-center mb-6 font-semibold" style="font-size:1.1rem">Mevcut Sorunlar</h3>
+  <div class="grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div class="prob-card reveal">
+      <div class="text-2xl mb-2">💸</div>
+      <h4 class="font-cinzel-plain text-gold text-sm font-semibold mb-2">Mali Kriz Etkileri</h4>
+      <p class="text-marble/60 text-xs font-lato leading-relaxed">2008-2018 ekonomik krizinin ardından spor bütçeleri ciddi biçimde kısıldı; tesis bakımı ve sporcu destekleri yetersiz kaldı.</p>
+    </div>
+    <div class="prob-card reveal">
+      <div class="text-2xl mb-2">⚽</div>
+      <h4 class="font-cinzel-plain text-gold text-sm font-semibold mb-2">Futbolun Ağırlıklı Olması</h4>
+      <p class="text-marble/60 text-xs font-lato leading-relaxed">Medya ilgisi ve sponsorlukların büyük bölümü futbola yönelmekte; diğer olimpik branşlar görece geri planda kalmaktadır.</p>
+    </div>
+    <div class="prob-card reveal">
+      <div class="text-2xl mb-2">🏗️</div>
+      <h4 class="font-cinzel-plain text-gold text-sm font-semibold mb-2">2004 Tesislerinin Bakımı</h4>
+      <p class="text-marble/60 text-xs font-lato leading-relaxed">Atina Olimpiyatları için inşa edilen modern tesislerin bir kısmı ekonomik sıkıntılar nedeniyle atıl durmakta ve bakımsız kalmaktadır.</p>
+    </div>
+    <div class="prob-card reveal">
+      <div class="text-2xl mb-2">👶</div>
+      <h4 class="font-cinzel-plain text-gold text-sm font-semibold mb-2">Genç Sporcu Yetersizliği</h4>
+      <p class="text-marble/60 text-xs font-lato leading-relaxed">Nüfusun azlığı ve göç sorunu nedeniyle genç sporcu havuzu daralmakta; uzun vadeli olimpik planlama güçleşmektedir.</p>
+    </div>
+    <div class="prob-card reveal">
+      <div class="text-2xl mb-2">📺</div>
+      <h4 class="font-cinzel-plain text-gold text-sm font-semibold mb-2">Yayın Hakları Geliri</h4>
+      <p class="text-marble/60 text-xs font-lato leading-relaxed">Süper Lig büyük kulüplerinin yayın gelirleri tatmin edici düzeyde olsa da küçük kulüpler ve amatör branşlar yeterli finansman bulamamaktadır.</p>
+    </div>
+    <div class="prob-card reveal">
+      <div class="text-2xl mb-2">🌍</div>
+      <h4 class="font-cinzel-plain text-gold text-sm font-semibold mb-2">Uluslararası Rekabet Baskısı</h4>
+      <p class="text-marble/60 text-xs font-lato leading-relaxed">Büyük bütçeli ülkeler karşısında olimpik başarıyı sürdürmek için daha sistematik bir yetenek geliştirme ve antrenör yetiştirme programına ihtiyaç duyulmaktadır.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<!-- ░░ ŞAMPIYONLAR BLOĞU ░░ -->
+<section class="relative z-10 max-w-5xl mx-auto px-6 py-16">
+  <a href="greece1.html" style="text-decoration:none; display:block">
+    <div style="
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 1.5rem;
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    "
+    onmouseover="this.style.borderColor='rgba(201,168,76,0.8)'; this.style.boxShadow='0 0 60px rgba(201,168,76,0.15)'; this.style.transform='translateY(-4px)'"
+    onmouseout="this.style.borderColor='rgba(201,168,76,0.35)'; this.style.boxShadow='none'; this.style.transform='translateY(0)'"
+    >
+      <!-- bg glow -->
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%, rgba(201,168,76,0.07), transparent 70%);pointer-events:none"></div>
+
+      <div style="font-size:3.5rem; margin-bottom:1rem; filter:drop-shadow(0 0 20px rgba(201,168,76,0.6))">🏆</div>
+
+      <div style="
+        font-family:'Cinzel Decorative',serif;
+        font-size: clamp(1.2rem, 3vw, 2rem);
+        font-weight: 900;
+        background: linear-gradient(135deg, #8B6914, #C9A84C, #fff8d0, #C9A84C, #8B6914);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.75rem;
+      ">Olimpiyat Şampiyonları</div>
+
+      <p style="
+        font-family:'Cinzel',serif;
+        font-size:0.75rem;
+        letter-spacing:0.2em;
+        text-transform:uppercase;
+        color:rgba(201,168,76,0.55);
+        margin-bottom:1.5rem;
+      ">Altın Madalya Şöhret Salonu • Fotoğraflar &amp; Videolar</p>
+
+      <div style="
+        display:inline-flex;
+        align-items:center;
+        gap:0.6rem;
+        background: linear-gradient(135deg, #8B6914, #C9A84C);
+        color: #07070d;
+        font-family:'Cinzel',serif;
+        font-size:0.78rem;
+        font-weight:700;
+        letter-spacing:0.15em;
+        text-transform:uppercase;
+        padding:0.7rem 2rem;
+        border-radius:3rem;
+        box-shadow:0 8px 30px rgba(201,168,76,0.3);
+      ">
+        Şampiyonları Keşfet
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="#07070d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </a>
+</section>
+
+<footer class="relative z-10 text-center py-12 px-6 border-t border-gold/20">
+  <p class="font-cinzel-plain text-gold/40 text-xs tracking-widest">YUNANİSTAN'IN SONSUZ MİRASI • SPOR, BEDEN EĞİTİMİ VE RUHSAL GÜÇ</p>
+</footer>
+
+<style>
+  @keyframes jump { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
+  @keyframes discusThrow { 0%{transform:rotate(-30deg);} 100%{transform:rotate(30deg);} }
+  @keyframes wrestle { 0%{transform:translateX(0);} 50%{transform:translateX(5px);} 100%{transform:translateX(-5px);} }
+  @keyframes chariot { 0%,100%{transform:rotate(-3deg);} 50%{transform:rotate(3deg);} }
+</style>
+
+<script>
+  /* Stars */
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 130; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${(Math.random()*3+2).toFixed(1)}s;--delay:${(Math.random()*3).toFixed(1)}s`;
+    starsEl.appendChild(s);
+  }
+
+  /* Scroll reveal */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4 * 0.08) + 's';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
